@@ -9,7 +9,12 @@ import librarianRoutes from "./routes/librarian.js";
 import memberRoutes from "./routes/members.js";
 
 const app = express();
-app.use(cors({ origin: ["http://localhost:5173"] }));
+app.use(cors({ origin: [
+  "http://localhost:5173",
+  "[https://reader-s-room.onrender.com](https://reader-s-room.onrender.com)"
+],
+credentials: true
+ }));
 app.use(express.json());
 
 app.get("/api/health", (req, res) => res.json({ ok: true }));
