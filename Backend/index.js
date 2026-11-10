@@ -9,12 +9,24 @@ import librarianRoutes from "./routes/librarian.js";
 import memberRoutes from "./routes/members.js";
 
 const app = express();
-app.use(cors({ origin: [
+const allowedOrigins = [
   "http://localhost:5173",
-  "[https://reader-s-room.onrender.com](https://reader-s-room.onrender.com)"
-],
-credentials: true
- }));
+  "https://reader-s-room.onrender.com",
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. mobile apps, curl, server-to-server) or matching allowed origins
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS blocked origin: ${origin}`));
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.get("/api/health", (req, res) => res.json({ ok: true }));
